@@ -1,0 +1,23 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="Suite1" verbose="1">
+    <listeners>
+        <listener class-name="TestBases.ExtentReportListener"/>
+    </listeners>
+
+    <test name="APITest">
+        <classes>
+            <class name="EndPoints.Status"/>
+            <class name="EndPoints.ListOfBooks"/>
+            <class name="EndPoints.GetASingleBook"/>
+            <class name="EndPoints.GetToken"/>
+            <class name="EndPoints.SubmitAnOrder"/>
+            <class name="EndPoints.GetAllOrders"/>
+            <class name="EndPoints.GetAnOrder"/>
+            <class name="EndPoints.UpdateAnOrder"/>
+            <class name="EndPoints.DeleteAnOrder"/>
+        </classes>
+    </test>
+
+ 
+</suite>
