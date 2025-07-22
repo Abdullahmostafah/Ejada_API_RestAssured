@@ -1,35 +1,37 @@
 package EndPoints;
 
 import TestBases.TestBase;
-import io.restassured.http.ContentType;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+import static Utils.ConfigReaderWriter.getPropKey;
 
+@Epic("Order Management")
+@Feature("Order Updates")
 public class UpdateAnOrder extends TestBase {
 
-    @Test
-    public void updateAnOrder(){
-        baseURL();
-        String requestBody = "{\n" +
-                "  \"customerName\": \"" + updatedCustomerName + "\"\n" +
-                "}";
+    @Test(priority = 3)
+    @Story("Modify Order")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Update an existing order's details")
+    public void updateAnOrder() {
 
-        Response response=
-                given()
-                        .header("Authorization", "Bearer " + accessToken)
-                        .contentType(ContentType.JSON)
-                        .pathParam("orderId", orderID)
-                        .body(requestBody)
-                        .when()
-                        .patch("/orders/{orderId}")
-                        .then()
-                        .statusCode(204) //200
-                        //.body("customerName", equalTo(updatedCustomerName))
-                        .extract().response();
-        response.prettyPrint();
+        String requestBody = String.format("{\"customerName\":\"%s\"}",
+                getPropKey("order.updated.customer.name"));
+
+        Response response = given()
+                .spec(requestSpec)
+                .auth().oauth2(getPropKey("access.token"))
+                .pathParam("orderId", orderID)
+                .body(requestBody)
+                .when()
+                .patch("/orders/{orderId}")
+                .then()
+                .statusCode(204)
+                .extract().response();
+
+        attachRequestAndResponseToReport(requestBody, response);
     }
 }
-

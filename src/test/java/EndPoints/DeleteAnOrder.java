@@ -1,26 +1,34 @@
 package EndPoints;
 
 import TestBases.TestBase;
+import Utils.ConfigReaderWriter;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
+import static Utils.ConfigReaderWriter.getPropKey;
 import static io.restassured.RestAssured.given;
 
+@Epic("Order Management")
+@Feature("Order Deletion")
 public class DeleteAnOrder extends TestBase {
-    @Test
-    public void deleteAnOrder(){
-        baseURL();
+
+    @Test(priority = 4)
+    @Story("Remove Order")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Delete an existing order")
+    public void deleteAnOrder() {
 
         Response response = given()
-                        .header("Authorization", "Bearer " + accessToken)
-                        .pathParam("orderId", orderID)
-                        .when()
-                        .delete("/orders/{orderId}")
-                        .then()
-                        .statusCode(204)
-                        .extract().response();
-        response.prettyPrint();
+                .spec(requestSpec)
+                .auth().oauth2(getPropKey("access.token"))
+                .pathParam("orderId", orderID)
+                .when()
+                .delete("/orders/{orderId}")
+                .then()
+                .statusCode(204)
+                .extract().response();
 
+        attachResponseToReport(response);
     }
-
 }
